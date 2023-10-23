@@ -51,6 +51,7 @@ void serve_connection(int connection_socket) {
 }
 
 int main(int argc, char* argv[]) {
+  std::setvbuf(stdout, nullptr, _IONBF, 0);
   uint16_t portnum = 9090;
   if (argc >= 2) {
     portnum = atoi(argv[1]);
