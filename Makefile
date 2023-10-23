@@ -11,3 +11,9 @@ sequential_server: utils.cpp sequential_server.cpp
 
 multithreaded_server: utils.cpp multithreaded_server.cpp
 	$(CPP) $(CPPFLAGS) $^ -o $@
+
+clean:
+	rm -rf $(PROGRAMS) *.o *.a a.out *.err *~
+
+format:
+	clang-format -style=LLVM -i *.cpp *.h
