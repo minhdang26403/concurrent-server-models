@@ -1,7 +1,3 @@
-#include <netinet/in.h>
-#include <sys/socket.h>
-
-#include <cstdlib>
 #include <iostream>
 
 #include "utils.h"
@@ -71,7 +67,7 @@ int main(int argc, char* argv[]) {
     int connection_socket =
         accept(server_socket, reinterpret_cast<struct sockaddr*>(&client_addr),
                &client_addr_len);
-    
+
     if (connection_socket < 0) {
       perror_die("ERROR on accept");
     }

@@ -3,11 +3,6 @@
 #include <netdb.h>
 
 #include <iostream>
-// #include <sys/socket.h>
-// #include <sys/types.h>
-
-#include <cstdio>
-#include <cstdlib>
 
 static constexpr int N_BACKLOG = 64;
 
