@@ -6,16 +6,16 @@
 
 static constexpr int N_BACKLOG = 64;
 
-void perror_die(const char* msg) {
+void perror_die(const char *msg) {
   std::perror(msg);
   std::exit(EXIT_FAILURE);
 }
 
-void report_client_connected(const struct sockaddr_in& sa, socklen_t salen) {
+void report_client_connected(const struct sockaddr_in &sa, socklen_t salen) {
   char hostbuf[NI_MAXHOST];
   char portbuf[NI_MAXSERV];
-  if (getnameinfo(reinterpret_cast<const struct sockaddr*>(&sa), salen, hostbuf,
-                  NI_MAXHOST, portbuf, NI_MAXSERV, 0) == 0) {
+  if (getnameinfo(reinterpret_cast<const struct sockaddr *>(&sa), salen,
+                  hostbuf, NI_MAXHOST, portbuf, NI_MAXSERV, 0) == 0) {
     std::cout << "Client (" << hostbuf << ", " << portbuf << ") connected\n";
   } else {
     std::cout << "Client (unknown) connected\n";
@@ -43,7 +43,7 @@ int listen_inet_socket(uint16_t portnum) {
   server_addr.sin_addr.s_addr = INADDR_ANY;
   server_addr.sin_port = htons(portnum);
 
-  if (bind(server_socket, reinterpret_cast<struct sockaddr*>(&server_addr),
+  if (bind(server_socket, reinterpret_cast<struct sockaddr *>(&server_addr),
            sizeof(server_addr)) < 0) {
     perror_die("ERROR on binding");
   }

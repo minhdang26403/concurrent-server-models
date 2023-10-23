@@ -27,23 +27,23 @@ void serve_connection(int connection_socket) {
 
     for (int i = 0; i < len; i++) {
       switch (state) {
-        case ProcessingState::WAIT_FOR_MSG:
-          if (buf[i] == '^') {
-            state = ProcessingState::IN_MSG;
+      case ProcessingState::WAIT_FOR_MSG:
+        if (buf[i] == '^') {
+          state = ProcessingState::IN_MSG;
+        }
+        break;
+      case ProcessingState::IN_MSG:
+        if (buf[i] == '$') {
+          state = ProcessingState::WAIT_FOR_MSG;
+        } else {
+          buf[i] += 1;
+          if (send(connection_socket, &buf[i], 1, 0) < 1) {
+            std::perror("send error");
+            shutdown(connection_socket, SHUT_RDWR);
+            return;
           }
-          break;
-        case ProcessingState::IN_MSG:
-          if (buf[i] == '$') {
-            state = ProcessingState::WAIT_FOR_MSG;
-          } else {
-            buf[i] += 1;
-            if (send(connection_socket, &buf[i], 1, 0) < 1) {
-              std::perror("send error");
-              shutdown(connection_socket, SHUT_RDWR);
-              return;
-            }
-          }
-          break;
+        }
+        break;
       }
     }
   }
@@ -59,7 +59,7 @@ void server_thread(int connection_socket) {
   std::cout << "Thread " << tid << " done\n";
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   std::setvbuf(stdout, nullptr, _IONBF, 0);
   uint16_t portnum = 9090;
   if (argc >= 2) {
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     struct sockaddr_in client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
     int connection_socket =
-        accept(server_socket, reinterpret_cast<struct sockaddr*>(&client_addr),
+        accept(server_socket, reinterpret_cast<struct sockaddr *>(&client_addr),
                &client_addr_len);
     if (connection_socket < 0) {
       perror_die("ERROR on accept");
