@@ -8,4 +8,4 @@ void perror_die(const char *msg);
 void report_client_connected(const struct sockaddr_in &sa, socklen_t salen);
 int listen_inet_socket(uint16_t portnum);
 
-#endif // UTILS_H_
+#endif  // UTILS_H_
