@@ -27,23 +27,23 @@ void serve_connection(int connection_socket) {
 
     for (int i = 0; i < len; i++) {
       switch (state) {
-      case ProcessingState::WAIT_FOR_MSG:
-        if (buf[i] == '^') {
-          state = ProcessingState::IN_MSG;
-        }
-        break;
-      case ProcessingState::IN_MSG:
-        if (buf[i] == '$') {
-          state = ProcessingState::WAIT_FOR_MSG;
-        } else {
-          buf[i] += 1;
-          if (send(connection_socket, &buf[i], 1, 0) < 1) {
-            std::perror("send error");
-            shutdown(connection_socket, SHUT_RDWR);
-            return;
+        case ProcessingState::WAIT_FOR_MSG:
+          if (buf[i] == '^') {
+            state = ProcessingState::IN_MSG;
           }
-        }
-        break;
+          break;
+        case ProcessingState::IN_MSG:
+          if (buf[i] == '$') {
+            state = ProcessingState::WAIT_FOR_MSG;
+          } else {
+            buf[i] += 1;
+            if (send(connection_socket, &buf[i], 1, 0) < 1) {
+              std::perror("send error");
+              shutdown(connection_socket, SHUT_RDWR);
+              return;
+            }
+          }
+          break;
       }
     }
   }
