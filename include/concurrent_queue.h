@@ -10,9 +10,9 @@ class concurrent_queue {
  public:
   concurrent_queue() : head(std::make_unique<node>()), tail(head.get()) {}
 
-  concurrent_queue(const concurrent_queue&) = delete;
+  concurrent_queue(const concurrent_queue &) = delete;
 
-  concurrent_queue& operator=(const concurrent_queue&) = delete;
+  concurrent_queue &operator=(const concurrent_queue &) = delete;
 
   void push(T new_value) {
     auto new_data = std::make_shared<T>(std::move(new_value));
@@ -20,7 +20,7 @@ class concurrent_queue {
     {
       std::lock_guard<std::mutex> tail_lock(tail_mutex);
       tail->data = new_data;
-      node* const new_tail = p.get();
+      node *const new_tail = p.get();
       tail->next = std::move(p);
       tail = new_tail;
     }
@@ -33,14 +33,14 @@ class concurrent_queue {
     return old_head->data;
   }
 
-  void wait_and_pop(T& value) { wait_pop_head(value); }
+  void wait_and_pop(T &value) { wait_pop_head(value); }
 
   std::shared_ptr<T> try_pop() {
     std::unique_ptr<node> old_head = try_pop_head();
     return old_head ? old_head->data : std::shared_ptr<T>();
   }
 
-  bool try_pop(T& value) { return try_pop_head(value); }
+  bool try_pop(T &value) { return try_pop_head(value); }
 
   bool empty() const {
     std::lock_guard<std::mutex> head_lock(head_mutex);
@@ -53,7 +53,7 @@ class concurrent_queue {
     std::unique_ptr<node> next;
   };
 
-  node* get_tail() const {
+  node *get_tail() const {
     std::lock_guard<std::mutex> tail_lock(tail_mutex);
     return tail;
   }
@@ -75,7 +75,7 @@ class concurrent_queue {
     return pop_head();
   }
 
-  void wait_pop_head(T& value) {
+  void wait_pop_head(T &value) {
     std::unique_lock<std::mutex> head_lock(wait_for_data());
     value = std::move(*head->data);
     pop_head();
@@ -89,7 +89,7 @@ class concurrent_queue {
     return pop_head();
   }
 
-  bool try_pop_head(T& value) {
+  bool try_pop_head(T &value) {
     std::lock_guard<std::mutex> head_lock(head_mutex);
     if (head.get() == get_tail()) {
       return false;
@@ -102,7 +102,7 @@ class concurrent_queue {
   mutable std::mutex head_mutex;
   std::unique_ptr<node> head;
   mutable std::mutex tail_mutex;
-  node* tail;
+  node *tail;
   std::condition_variable data_cond;
 };
 
